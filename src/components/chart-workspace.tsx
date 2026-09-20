@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useRef, useState } from "react";
-import Link from "next/link";
+import { SiteHeader } from "@/components/site-header";
 import {
   ArrowDownToLine,
   BarChart3,
@@ -13,14 +13,11 @@ import {
   ChevronDown,
   CircleHelp,
   CircleSmall,
-  GitFork,
   Loader2,
-  Moon,
   Radar,
   RotateCcw,
   ScatterChart,
   SlidersHorizontal,
-  Sun,
   Upload,
   X,
 } from "lucide-react";
@@ -69,7 +66,11 @@ const icons = {
 };
 const sourceUrl = "https://github.com/mariansandurdesign/csv-to-chart-library";
 
-export function ChartWorkspace() {
+export function ChartWorkspace({
+  initialType = "bar",
+}: {
+  initialType?: ChartType;
+}) {
   const [dataset, setDataset] = useState<Dataset>(SAMPLE_DATA);
   const [history, setHistory] = useState<Dataset[]>([]);
   const [filename, setFilename] = useState("revenue.csv");
@@ -77,7 +78,7 @@ export function ChartWorkspace() {
   const [csvDraft, setCsvDraft] = useState(SAMPLE_CSV);
   const [appliedCsv, setAppliedCsv] = useState(SAMPLE_CSV);
   const [theme, setTheme] = useState<"light" | "dark">("dark");
-  const [type, setType] = useState<ChartType>("bar");
+  const [type, setType] = useState<ChartType>(initialType);
   const [labelColumn, setLabelColumn] = useState("c0");
   const [xColumn, setXColumn] = useState("c1");
   const [selectedSeries, setSelectedSeries] = useState(["c1", "c2"]);
@@ -275,36 +276,7 @@ export function ChartWorkspace() {
 
   return (
     <div className={`app-shell ${theme}`}>
-      <header className="site-header">
-        <div className="header-inner">
-          <Link className="brand" href="/" aria-label="Plotroom home">
-            <ChartNoAxesCombined size={23} strokeWidth={2} />
-            Plotroom<span>CSV to chart</span>
-          </Link>
-          <nav>
-            <a
-              className="github-link"
-              href={sourceUrl}
-              target="_blank"
-              rel="noreferrer"
-            >
-              <GitFork size={15} /> GitHub
-            </a>
-            <Button
-              variant="ghost"
-              size="icon"
-              aria-label={
-                theme === "dark"
-                  ? "Switch to light theme"
-                  : "Switch to dark theme"
-              }
-              onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-            >
-              {theme === "dark" ? <Sun size={17} /> : <Moon size={17} />}
-            </Button>
-          </nav>
-        </div>
-      </header>
+      <SiteHeader theme={theme} onThemeChange={setTheme} />
       <main>
         <div className="chart-navigation" aria-label="Chart types">
           {chartTypes.map((chart) => {

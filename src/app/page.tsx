@@ -1,5 +1,5 @@
-import { ChartWorkspace } from "@/components/chart-workspace";
+import { LandingPage } from "@/components/landing-page";
 
 export default function Home() {
-  return <ChartWorkspace />;
+  return <LandingPage />;
 }

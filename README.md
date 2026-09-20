@@ -2,15 +2,17 @@
 
 **CSV in. Chart out.**
 
-An open-source chart studio built with Next.js, shadcn/ui, and Recharts. Paste or upload a CSV, edit the numbers, choose a chart, and download a picture you can use anywhere. A minimal two-column workspace with light and dark themes.
+An open-source chart studio built with Next.js, shadcn/ui, and Recharts. The home page introduces the tool with a live chart preview, then the editor lets you paste or upload a CSV, edit the numbers, choose a chart, and download a picture you can use anywhere.
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fmariansandurdesign%2Fcsv-to-chart-library)
 
-![Plotroom chart workspace](docs/preview.png)
+![Plotroom landing page](docs/preview.png)
 
 ## Features
 
 - Seven charts: bar, line, area, pie, donut, scatter, and radar.
+- Landing page with a live sample preview, chart directory, FAQs, and direct links into the editor.
+- Static editor routes at `/charts`, `/charts/bar`, `/charts/line`, `/charts/area`, `/charts/pie`, `/charts/donut`, `/charts/scatter`, and `/charts/radar`.
 - Paste CSV, Upload CSV, and Edit table tabs. Paste text and apply it explicitly, or import CSV/TSV through a file picker or drag and drop. Detects commas, semicolons, tabs, and pipes; supports quoted fields, embedded newlines, UTF-8 BOMs, and duplicate headers.
 - Editable table with pagination, add/delete rows, and undo for the last 20 data changes. Press Enter or leave a cell to apply; Escape cancels the current edit.
 - A collapsed Customize panel for column mapping, up to six series, four color palettes, chart titles/subtitles, and grid/legend toggles.
@@ -31,7 +33,7 @@ npm ci
 npm run dev
 ```
 
-Open [localhost:3000](http://localhost:3000).
+Open [localhost:3000](http://localhost:3000) for the landing page, or [localhost:3000/charts](http://localhost:3000/charts) for the editor.
 
 ```bash
 npm run build      # Generate a static production site in out/
@@ -69,8 +71,10 @@ Use the Deploy button above, or import this GitHub repository at [Vercel New Pro
 ## Project structure
 
 ```text
-src/app/                     Next.js page, layout, and theme
+src/app/                     Next.js landing, editor routes, layout, and theme
+src/components/landing-page.tsx     Home page with live chart preview
 src/components/chart-workspace.tsx  Workspace state and controls
+src/components/site-header.tsx      Shared navigation and theme toggle
 src/components/chart-preview.tsx    Reusable seven-type chart renderer
 src/components/data-table.tsx       Editable paginated table
 src/components/ui/                  shadcn/ui components (Base UI)
@@ -78,7 +82,8 @@ src/lib/data.ts                     CSV parsing, serialization, and summaries
 src/lib/chart-config.ts             Chart definitions and palettes
 src/lib/export-chart.ts             Browser-side SVG/PNG generation
 src/lib/data.test.ts                Unit tests
-tests/workspace.spec.ts             End-to-end browser tests
+tests/landing.spec.ts               Landing and route browser tests
+tests/workspace.spec.ts             Editor browser tests
 ```
 
 This repository is a runnable application and source library, not a published npm package. Reuse `ChartPreview`, the data utilities, and the export function in your own React projects. `ChartPreview` is a client component; provide `data`, selected `series`, a chart `type`, `colors`, and `showGrid`, inside a container with a defined height.

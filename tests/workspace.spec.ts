@@ -6,7 +6,7 @@ test("all seven charts render and export self-contained SVG images", async ({
 }) => {
   const errors: string[] = [];
   page.on("pageerror", (error) => errors.push(error.message));
-  await page.goto("/");
+  await page.goto("/charts");
   await expect(page.getByRole("heading", { name: "Bar chart" })).toBeVisible();
   await page.getByLabel("Image format").selectOption("svg");
   for (const name of [
@@ -35,7 +35,7 @@ test("all seven charts render and export self-contained SVG images", async ({
 });
 
 test("PNG download is a real high-resolution image", async ({ page }) => {
-  await page.goto("/");
+  await page.goto("/charts");
   await expect(page.locator(".recharts-bar-rectangle").first()).toBeVisible();
   const downloaded = page.waitForEvent("download");
   await page.getByRole("button", { name: "Download chart" }).click();
@@ -50,7 +50,7 @@ test("PNG download is a real high-resolution image", async ({ page }) => {
 test("import, edit, undo, add/delete and CSV export work together", async ({
   page,
 }) => {
-  await page.goto("/");
+  await page.goto("/charts");
   await page.getByLabel("Upload CSV file").setInputFiles({
     name: "sales.csv",
     mimeType: "text/csv",
@@ -86,7 +86,7 @@ test("import, edit, undo, add/delete and CSV export work together", async ({
 test("invalid imports preserve data and unsupported chart values are explained", async ({
   page,
 }) => {
-  await page.goto("/");
+  await page.goto("/charts");
   await page.getByLabel("Upload CSV file").setInputFiles({
     name: "broken.csv",
     mimeType: "text/csv",
@@ -116,7 +116,7 @@ test("appearance controls, cell escape, help dialog and narrow screen work", asy
   page,
 }) => {
   await page.setViewportSize({ width: 390, height: 844 });
-  await page.goto("/");
+  await page.goto("/charts");
   await page.locator("summary").click();
   await page
     .getByLabel("Chart title", { exact: true })
@@ -151,7 +151,7 @@ test("appearance controls, cell escape, help dialog and narrow screen work", asy
 test("pasted CSV applies explicitly, keeps table edits in sync, and preserves a valid chart on error", async ({
   page,
 }) => {
-  await page.goto("/");
+  await page.goto("/charts");
   const csv = page.getByLabel("CSV data", { exact: true });
   await csv.fill("Month,Sales\nJan,10\nFeb,20");
   await expect(page.getByRole("tab", { name: "Edit table" })).toBeDisabled();
