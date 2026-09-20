@@ -13,9 +13,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Plotroom — CSV to chart",
+  title: "Plotroom — Data to chart",
   description:
-    "A free, open-source chart studio. Turn CSV files into seven chart types, edit your data, and download beautiful PNG or SVG images. Everything stays in your browser.",
+    "A free, open-source chart studio. Turn CSV, JSON, and XLSX files into seven chart types, edit your data, and download beautiful PNG or SVG images. Everything stays in your browser.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

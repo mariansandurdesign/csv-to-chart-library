@@ -54,7 +54,7 @@ test("mobile landing supports theme, FAQ, and create-chart navigation", async ({
   await expect(page.locator(".landing-page")).toHaveClass(/light/);
   await page.getByText("What happens to my data?", { exact: true }).click();
   await expect(
-    page.getByText("Your CSV is processed entirely in this browser tab.", {
+    page.getByText("Your data is processed entirely in this browser tab.", {
       exact: false,
     }),
   ).toBeVisible();

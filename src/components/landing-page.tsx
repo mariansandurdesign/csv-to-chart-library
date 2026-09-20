@@ -39,8 +39,8 @@ const steps = [
   {
     icon: FileSpreadsheet,
     title: "Bring your data",
-    text: "Paste a CSV, drop in a file, or start with our sample. Your columns are detected automatically.",
-    note: "CSV & TSV supported",
+    text: "Paste a CSV, drop in a spreadsheet, JSON file, or start with our sample. Your columns are detected automatically.",
+    note: "CSV, JSON & XLSX supported",
   },
   {
     icon: PencilLine,
@@ -64,12 +64,12 @@ const questions = [
   {
     question: "What happens to my data?",
     answer:
-      "Your CSV is processed entirely in this browser tab. It is never sent to an upload server. Refreshing clears your changes, so download your edited CSV from the table if you want to keep them.",
+      "Your data is processed entirely in this browser tab. It is never sent to an upload server. Refreshing clears your changes, so download your edited CSV from the table if you want to keep them.",
   },
   {
-    question: "What kind of CSV can I use?",
+    question: "What kind of files can I use?",
     answer:
-      "Use a CSV or TSV with column names in the first row and at least one numeric column. Files can contain up to 10,000 rows and 50 columns, with a 5 MB limit. Comma, semicolon, tab, and pipe separators are detected automatically.",
+      "Use CSV, TSV, or XLSX files with column names in the first row, or JSON as an array of objects or arrays. Files can contain up to 10,000 rows and 50 columns, with a 5 MB limit. CSV separators are detected automatically.",
   },
   {
     question: "Can I edit the data after uploading?",
@@ -121,8 +121,9 @@ export function LandingPage() {
               <em>a great chart.</em>
             </h1>
             <p>
-              Turn your CSV into something worth sharing. Choose a chart, edit
-              your data, and download a beautiful image. All in your browser.
+              Turn CSV, JSON, or XLSX into something worth sharing. Choose a
+              chart, edit your data, and download a beautiful image. All in your
+              browser.
             </p>
             <div className="hero-actions">
               <Link href="/charts" className="landing-button primary">

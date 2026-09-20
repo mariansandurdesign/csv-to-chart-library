@@ -1,8 +1,8 @@
 # Plotroom
 
-**CSV in. Chart out.**
+**Data in. Chart out.**
 
-An open-source chart studio built with Next.js, shadcn/ui, and Recharts. The home page introduces the tool with a live chart preview, then the editor lets you paste or upload a CSV, edit the numbers, choose a chart, and download a picture you can use anywhere.
+An open-source chart studio built with Next.js, shadcn/ui, and Recharts. The home page introduces the tool with a live chart preview, then the editor lets you paste CSV or upload CSV, TSV, JSON, and XLSX files, edit the numbers, choose a chart, and download a picture you can use anywhere.
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fmariansandurdesign%2Fcsv-to-chart-library)
 
@@ -13,7 +13,7 @@ An open-source chart studio built with Next.js, shadcn/ui, and Recharts. The hom
 - Seven charts: bar, line, area, pie, donut, scatter, and radar.
 - Landing page with a live sample preview, chart directory, FAQs, and direct links into the editor.
 - Static editor routes at `/charts`, `/charts/bar`, `/charts/line`, `/charts/area`, `/charts/pie`, `/charts/donut`, `/charts/scatter`, and `/charts/radar`.
-- Paste CSV, Upload CSV, and Edit table tabs. Paste text and apply it explicitly, or import CSV/TSV through a file picker or drag and drop. Detects commas, semicolons, tabs, and pipes; supports quoted fields, embedded newlines, UTF-8 BOMs, and duplicate headers.
+- Paste CSV, Upload file, and Edit table tabs. Paste CSV text and apply it explicitly, or import CSV, TSV, JSON, and XLSX through a file picker or drag and drop. CSV/TSV detects commas, semicolons, tabs, and pipes; supports quoted fields, embedded newlines, UTF-8 BOMs, and duplicate headers.
 - Editable table with pagination, add/delete rows, and undo for the last 20 data changes. Press Enter or leave a cell to apply; Escape cancels the current edit.
 - A collapsed Customize panel for column mapping, up to six series, four color palettes, chart titles/subtitles, and grid/legend toggles.
 - PNG export at 1×, 2×, or 3× resolution; scalable, self-contained SVG export. Includes titles and legends, without watermarks.
@@ -40,7 +40,7 @@ npm run build      # Generate a static production site in out/
 npm start          # Preview that build on port 3000
 npm run lint
 npm run typecheck
-npm test           # CSV and numeric-processing unit tests
+npm test           # Import and numeric-processing unit tests
 npx playwright install chromium
 npm run test:e2e   # Browser tests against the production build
 ```
@@ -58,12 +58,12 @@ Use the Deploy button above, or import this GitHub repository at [Vercel New Pro
 
 ## Data behavior and limits
 
-- The first row contains column headers. Import limits: **5 MB, 10,000 rows, 50 columns**.
+- CSV, TSV, and XLSX use the first row for column headers. JSON can be an array of objects, an array with a header row, or an object with `data`, `rows`, `items`, or `records`. Import limits: **5 MB, 10,000 rows, 50 columns**.
 - Numeric detection accepts decimals, negatives, scientific notation, and unambiguous comma thousands separators such as `"1,234.56"`. Decimal commas, currency symbols, percentages, and dates are not automatically converted. A column appears as numeric when at least half of its nonempty cells are valid numbers.
 - Blank or invalid numeric cells are treated as missing, not zero. They are excluded from summaries and indicated in the preview. Missing points leave gaps in line/area charts.
 - Pie/donut use the first selected series; those charts and radar require nonnegative values. Scatter requires numeric X and Y values on the same row. Duplicate category labels remain separate rows; data is not silently aggregated.
 - Charts and image exports show the **first 100 rows**, or **first 12 rows for pie, donut, and radar**, to keep images readable. A notice appears whenever this limit applies. Summaries and edited CSV downloads use **all rows**.
-- Pasted CSV is applied explicitly; an invalid draft preserves the previous chart. Table edits keep the CSV tab in sync. Discard or apply pending CSV text before editing cells.
+- Pasted CSV is applied explicitly; an invalid draft preserves the previous chart. JSON and XLSX imports are converted into the editable table and synced back to the CSV tab. Discard or apply pending CSV text before editing cells.
 - Data is kept in memory for the current tab only. Reloading clears edits. Download the edited CSV before leaving. Undo applies to edits and row operations; uploading a file or resetting the sample begins a new dataset.
 - CSV exports escape spreadsheet formula-like strings with a leading apostrophe. Valid signed numbers remain numeric. The original values remain unchanged in the app.
 - PNG files have a white background. SVG files contain vector chart elements and use system fonts so they do not need external assets. Very long export titles and legend labels are compressed to fit the image width.
@@ -78,7 +78,7 @@ src/components/site-header.tsx      Shared navigation and theme toggle
 src/components/chart-preview.tsx    Reusable seven-type chart renderer
 src/components/data-table.tsx       Editable paginated table
 src/components/ui/                  shadcn/ui components (Base UI)
-src/lib/data.ts                     CSV parsing, serialization, and summaries
+src/lib/data.ts                     CSV/JSON/XLSX parsing, serialization, and summaries
 src/lib/chart-config.ts             Chart definitions and palettes
 src/lib/export-chart.ts             Browser-side SVG/PNG generation
 src/lib/data.test.ts                Unit tests

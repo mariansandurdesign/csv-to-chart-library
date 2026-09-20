@@ -16,7 +16,7 @@ export function SiteHeader({
       <div className="header-inner">
         <Link className="brand" href="/" aria-label="Plotroom home">
           <ChartNoAxesCombined size={23} strokeWidth={2} />
-          Plotroom<span>CSV to chart</span>
+          Plotroom<span>Data to chart</span>
         </Link>
         <nav>
           <Link className="github-link" href="/charts">

@@ -51,7 +51,7 @@ test("import, edit, undo, add/delete and CSV export work together", async ({
   page,
 }) => {
   await page.goto("/charts");
-  await page.getByLabel("Upload CSV file").setInputFiles({
+  await page.getByLabel("Upload data file").setInputFiles({
     name: "sales.csv",
     mimeType: "text/csv",
     buffer: Buffer.from("Month,Revenue,Cost\nJan,10,4\nFeb,20,8\nMar,30,12"),
@@ -83,11 +83,33 @@ test("import, edit, undo, add/delete and CSV export work together", async ({
   expect(csv).not.toContain("Feb");
 });
 
+test("JSON uploads become editable chart data", async ({ page }) => {
+  await page.goto("/charts");
+  await page.getByLabel("Upload data file").setInputFiles({
+    name: "pipeline.json",
+    mimeType: "application/json",
+    buffer: Buffer.from(
+      JSON.stringify([
+        { Stage: "Lead", Deals: 12, Value: 1200 },
+        { Stage: "Trial", Deals: 8, Value: 2100 },
+        { Stage: "Won", Deals: 5, Value: 3400 },
+      ]),
+    ),
+  });
+  await expect(page.getByRole("status")).toContainText("3 rows imported");
+  await expect(page.getByRole("heading", { name: "pipeline" })).toBeVisible();
+  await expect(page.locator(".insight").first()).toContainText("25");
+  await page.getByRole("tab", { name: "Paste CSV" }).click();
+  await expect(page.getByLabel("CSV data", { exact: true })).toContainText(
+    "Lead,12,1200",
+  );
+});
+
 test("invalid imports preserve data and unsupported chart values are explained", async ({
   page,
 }) => {
   await page.goto("/charts");
-  await page.getByLabel("Upload CSV file").setInputFiles({
+  await page.getByLabel("Upload data file").setInputFiles({
     name: "broken.csv",
     mimeType: "text/csv",
     buffer: Buffer.from("Name,Value\nA,1,extra"),

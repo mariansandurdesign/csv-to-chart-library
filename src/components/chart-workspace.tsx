@@ -48,6 +48,8 @@ import {
   numericColumns,
   numericValue,
   parseCsv,
+  parseJson,
+  parseXlsx,
   SAMPLE_CSV,
   SAMPLE_DATA,
   serializeCsv,
@@ -65,6 +67,9 @@ const icons = {
   radar: Radar,
 };
 const sourceUrl = "https://github.com/mariansandurdesign/csv-to-chart-library";
+const supportedFilePattern = /\.(csv|tsv|json|xlsx)$/i;
+const supportedFileTypes =
+  ".csv,.tsv,.json,.xlsx,text/csv,text/tab-separated-values,application/json,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
 
 export function ChartWorkspace({
   initialType = "bar",
@@ -179,7 +184,11 @@ export function ChartWorkspace({
     setDataset(next);
     syncDraft(next);
   }
-  function loadDataset(next: Dataset, name: string, text: string) {
+  function loadDataset(
+    next: Dataset,
+    name: string,
+    csv = serializeCsv(next, false),
+  ) {
     const numeric = numericColumns(next);
     setDataset(next);
     setHistory([]);
@@ -191,8 +200,8 @@ export function ChartWorkspace({
     );
     setXColumn(numeric[0]?.id ?? next.columns[0].id);
     setSelectedSeries(numeric.slice(0, 3).map((column) => column.id));
-    setCsvDraft(text);
-    setAppliedCsv(text);
+    setCsvDraft(csv);
+    setAppliedCsv(csv);
     setNotice({
       kind: "success",
       text: `${next.rows.length.toLocaleString()} rows imported.${numeric.length ? "" : " Add numbers in the table to create a chart."}`,
@@ -211,21 +220,27 @@ export function ChartWorkspace({
   }
   async function importFile(file?: File) {
     if (!file) return;
-    if (!/\.(csv|tsv)$/i.test(file.name))
+    if (!supportedFilePattern.test(file.name))
       return setNotice({
         kind: "error",
-        text: "Please choose a .csv or .tsv file.",
+        text: "Please choose a .csv, .tsv, .json, or .xlsx file.",
       });
     if (file.size > MAX_FILE_BYTES)
       return setNotice({
         kind: "error",
-        text: "Please choose a CSV smaller than 5 MB.",
+        text: "Please choose a file smaller than 5 MB.",
       });
     setImporting(true);
     try {
-      const text = await file.text();
-      loadDataset(parseCsv(text), file.name, text);
-      setTitle(file.name.replace(/\.(csv|tsv)$/i, "").replace(/[-_]/g, " "));
+      const dataset = /\.(csv|tsv)$/i.test(file.name)
+        ? parseCsv(await file.text())
+        : /\.json$/i.test(file.name)
+          ? parseJson(await file.text())
+          : await parseXlsx(file);
+      loadDataset(dataset, file.name);
+      setTitle(
+        file.name.replace(supportedFilePattern, "").replace(/[-_]/g, " "),
+      );
       setSubtitle("");
       setInputMode("table");
     } catch (error) {
@@ -297,8 +312,8 @@ export function ChartWorkspace({
         <section className="page-heading">
           <h1>{currentChart.name} chart</h1>
           <p>
-            {currentChart.description}. Paste your data or upload a CSV to get
-            started.
+            {currentChart.description}. Paste CSV data or upload CSV, TSV, JSON,
+            or XLSX to get started.
           </p>
         </section>
         {notice && (
@@ -327,15 +342,15 @@ export function ChartWorkspace({
             <input
               ref={fileRef}
               type="file"
-              accept=".csv,.tsv,text/csv,text/tab-separated-values"
+              accept={supportedFileTypes}
               className="sr-only"
-              aria-label="Upload CSV file"
+              aria-label="Upload data file"
               onChange={(event) => importFile(event.target.files?.[0])}
             />
             <Tabs value={inputMode} onValueChange={setInputMode}>
               <TabsList className="input-tabs">
                 <TabsTrigger value="paste">Paste CSV</TabsTrigger>
-                <TabsTrigger value="upload">Upload CSV</TabsTrigger>
+                <TabsTrigger value="upload">Upload file</TabsTrigger>
                 <TabsTrigger value="table" disabled={draftChanged}>
                   Edit table
                 </TabsTrigger>
@@ -409,13 +424,14 @@ export function ChartWorkspace({
                     <Upload size={24} />
                   )}
                   <strong>
-                    {importing ? "Reading CSV…" : "Drop your CSV here"}
+                    {importing ? "Reading file…" : "Drop your data file here"}
                   </strong>
                   <span>or click to browse</span>
-                  <small>CSV or TSV · up to 5 MB</small>
+                  <small>CSV, TSV, JSON, or XLSX · up to 5 MB</small>
                 </button>
                 <p className="input-note">
-                  The first row should contain your column names.
+                  CSV, TSV, and XLSX use the first row as column names. JSON can
+                  be an array of objects or arrays.
                 </p>
               </TabsContent>
               <TabsContent value="table">
@@ -756,7 +772,7 @@ export function ChartWorkspace({
               </DialogTrigger>
               <DialogContent className={`help-dialog ${theme}`}>
                 <DialogHeader>
-                  <DialogTitle>CSV in. Chart out.</DialogTitle>
+                  <DialogTitle>Data in. Chart out.</DialogTitle>
                   <DialogDescription>
                     Paste, upload, or edit your data. Download the result.
                   </DialogDescription>
@@ -764,13 +780,14 @@ export function ChartWorkspace({
                 <div className="help-copy">
                   <p>
                     Paste a CSV and click <strong>Apply CSV</strong>, or upload
-                    a file with column headers in its first row. Up to 10,000
-                    rows, 50 columns, and 5 MB.
+                    CSV, TSV, JSON, or XLSX. Tabular files use the first row for
+                    column names. JSON can be an array of objects or arrays. Up
+                    to 10,000 rows, 50 columns, and 5 MB.
                   </p>
                   <p>
-                    Use <strong>Edit table</strong> to change cells. Enter or
-                    leaving a cell saves it; Escape cancels. Undo reverses up to
-                    20 data changes. Editing keeps the CSV tab in sync.
+                    Use <strong>Edit table</strong> to change cells. Press Enter
+                    or leave a cell to save it; Escape cancels. Undo reverses up
+                    to 20 data changes. Editing keeps the CSV tab in sync.
                   </p>
                   <p>
                     Choose from seven charts. Open <strong>Customize</strong>{" "}
