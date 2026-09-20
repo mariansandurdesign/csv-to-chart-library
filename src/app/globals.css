@@ -797,24 +797,42 @@ footer a:hover {
     gap: 24px;
   }
   .chart-navigation {
-    gap: 3px;
+    width: calc(100% + 48px);
+    max-width: none;
+    flex-wrap: nowrap;
+    gap: 8px;
+    margin-left: -24px;
+    margin-right: -24px;
     margin-bottom: 26px;
+    padding: 0 24px 8px;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-padding-inline: 24px;
+    scrollbar-width: none;
+  }
+  .chart-navigation::-webkit-scrollbar {
+    display: none;
   }
   .chart-navigation button {
-    padding: 8px 10px;
+    min-width: 74px;
+    min-height: 48px;
+    padding: 8px 12px;
+    scroll-snap-align: start;
   }
   .page-heading {
     margin-bottom: 24px;
   }
   .csv-editor,
   .upload-zone {
-    height: 220px;
+    height: 210px;
   }
   .customize {
     margin-top: 18px;
   }
   .customize summary {
+    min-height: 48px;
     padding-bottom: 0;
+    font-size: 13px;
   }
   .customize[open] summary {
     padding-bottom: 17px;
@@ -826,6 +844,20 @@ footer a:hover {
     align-items: center;
     flex-direction: row;
   }
+  .input-tabs {
+    height: 44px;
+    padding: 4px;
+  }
+  .input-tabs [data-slot="tabs-trigger"] {
+    font-size: 12px;
+  }
+  .table-scroll {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  table {
+    min-width: 640px;
+  }
   footer {
     margin-top: 40px;
   }
@@ -833,7 +865,7 @@ footer a:hover {
 @media (max-width: 480px) {
   .header-inner {
     height: 59px;
-    padding: 0 18px;
+    padding: 0 16px;
   }
   .brand {
     font-size: 18px;
@@ -842,28 +874,50 @@ footer a:hover {
     display: none;
   }
   .site-header nav {
-    gap: 14px;
+    gap: 11px;
+  }
+  .github-link {
+    gap: 5px;
+    font-size: 11px;
+  }
+  .site-header nav [data-slot="button"] {
+    width: 32px;
+    height: 32px;
   }
   main {
-    padding: 24px 18px 0;
+    padding: 22px 18px 0;
   }
   .chart-navigation {
-    width: 100%;
-    gap: 2px;
-    flex-wrap: nowrap;
-    justify-content: space-between;
+    width: calc(100% + 36px);
+    margin-left: -18px;
+    margin-right: -18px;
+    padding-left: 18px;
+    padding-right: 18px;
   }
   .chart-navigation button {
+    flex: 0 0 auto;
+    min-width: 72px;
+    min-height: 52px;
     flex-direction: column;
     gap: 6px;
-    font-size: 10px;
-    padding: 7px 5px;
+    font-size: 11px;
+    padding: 8px 10px;
   }
   h1 {
     font-size: 27px;
   }
   .page-heading p {
     font-size: 12px;
+  }
+  .input-actions [data-slot="button"] {
+    min-height: 38px;
+  }
+  .source-actions {
+    gap: 8px;
+    font-size: 10px;
+  }
+  .source-actions button {
+    min-height: 34px;
   }
   .chart-heading {
     padding: 21px 20px 0;
@@ -876,9 +930,10 @@ footer a:hover {
     margin-left: 8px;
     margin-right: 8px;
     width: calc(100% - 16px);
-    height: 290px;
+    height: 250px;
   }
   .insights {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     padding: 16px 20px;
     gap: 8px;
   }
@@ -886,17 +941,29 @@ footer a:hover {
     font-size: 16px;
   }
   .export-toolbar {
-    align-items: flex-end;
+    align-items: stretch;
     flex-direction: column;
+  }
+  .export-actions {
+    display: grid;
+    grid-template-columns: 1fr 0.82fr;
+    width: 100%;
+  }
+  .export-actions .select-wrap,
+  .export-actions .select-wrap:nth-child(2) {
+    width: 100%;
+  }
+  .export-actions [data-slot="button"] {
+    grid-column: 1 / -1;
+    width: 100%;
+    justify-content: center;
+    min-height: 42px;
   }
   footer {
     align-items: flex-start;
     flex-direction: column;
     gap: 10px;
     font-size: 10px;
-  }
-  .source-actions {
-    font-size: 9px;
   }
   .notice {
     font-size: 11px;
