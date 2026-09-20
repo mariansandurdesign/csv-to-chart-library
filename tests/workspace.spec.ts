@@ -7,9 +7,7 @@ test("all seven charts render and export self-contained SVG images", async ({
   const errors: string[] = [];
   page.on("pageerror", (error) => errors.push(error.message));
   await page.goto("/");
-  await expect(
-    page.getByRole("heading", { name: "Your data. A clearer story." }),
-  ).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Bar chart" })).toBeVisible();
   await page.getByLabel("Image format").selectOption("svg");
   for (const name of [
     "Bar",
@@ -29,7 +27,7 @@ test("all seven charts render and export self-contained SVG images", async ({
     const download = await downloaded;
     expect(download.suggestedFilename()).toMatch(/\.svg$/);
     const svg = await readFile((await download.path())!, "utf8");
-    expect(svg).toContain("A year of growing connections");
+    expect(svg).toContain("Revenue &amp; expenses");
     expect(svg).toContain("<path");
     expect(svg).not.toContain("<script");
   }
@@ -60,6 +58,7 @@ test("import, edit, undo, add/delete and CSV export work together", async ({
   });
   await expect(page.getByRole("status")).toContainText("3 rows imported");
   await expect(page.locator(".insight").first()).toContainText("60");
+  await page.getByRole("tab", { name: "Edit table" }).click();
   const cell = page.getByLabel("Row 1, Revenue", { exact: true });
   await cell.fill("100");
   await cell.press("Enter");
@@ -94,11 +93,12 @@ test("invalid imports preserve data and unsupported chart values are explained",
     buffer: Buffer.from("Name,Value\nA,1,extra"),
   });
   await expect(page.locator(".notice[role=alert]")).toContainText("more cells");
-  await expect(page.getByLabel("Row 1, Organic", { exact: true })).toHaveValue(
-    "2400",
+  await page.getByRole("tab", { name: "Edit table" }).click();
+  await expect(page.getByLabel("Row 1, Revenue", { exact: true })).toHaveValue(
+    "4200",
   );
-  await page.getByLabel("Row 1, Organic", { exact: true }).fill("-100");
-  await page.getByLabel("Row 1, Organic", { exact: true }).press("Enter");
+  await page.getByLabel("Row 1, Revenue", { exact: true }).fill("-100");
+  await page.getByLabel("Row 1, Revenue", { exact: true }).press("Enter");
   await page.getByRole("button", { name: "Pie", exact: true }).click();
   await expect(
     page.getByText("This chart needs nonnegative values.", { exact: false }),
@@ -117,6 +117,7 @@ test("appearance controls, cell escape, help dialog and narrow screen work", asy
 }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/");
+  await page.locator("summary").click();
   await page
     .getByLabel("Chart title", { exact: true })
     .fill("Our team’s progress");
@@ -129,17 +130,45 @@ test("appearance controls, cell escape, help dialog and narrow screen work", asy
   ).toHaveAttribute("aria-pressed", "true");
   await page.getByRole("switch", { name: "Legend", exact: true }).click();
   await expect(page.locator(".chart-legend")).toHaveCount(0);
-  const cell = page.getByLabel("Row 1, Organic", { exact: true });
+  await page.getByRole("tab", { name: "Edit table" }).click();
+  const cell = page.getByLabel("Row 1, Revenue", { exact: true });
   await cell.fill("999");
   await cell.press("Escape");
-  await expect(cell).toHaveValue("2400");
+  await expect(cell).toHaveValue("4200");
   expect(
     await page.evaluate(
       () => document.documentElement.scrollWidth <= window.innerWidth,
     ),
   ).toBe(true);
+  await page.getByRole("button", { name: "Switch to light theme" }).click();
+  await expect(page.locator(".app-shell")).toHaveClass("app-shell light");
   await page.getByRole("button", { name: "How it works" }).click();
   await expect(page.getByRole("dialog")).toBeVisible();
   await page.getByRole("button", { name: "Close", exact: true }).click();
   await expect(page.getByRole("dialog")).not.toBeVisible();
+});
+
+test("pasted CSV applies explicitly, keeps table edits in sync, and preserves a valid chart on error", async ({
+  page,
+}) => {
+  await page.goto("/");
+  const csv = page.getByLabel("CSV data", { exact: true });
+  await csv.fill("Month,Sales\nJan,10\nFeb,20");
+  await expect(page.getByRole("tab", { name: "Edit table" })).toBeDisabled();
+  await page.getByRole("button", { name: "Apply CSV" }).click();
+  await expect(page.locator(".insight").first()).toContainText("30");
+  await page.getByRole("tab", { name: "Edit table" }).click();
+  const cell = page.getByLabel("Row 1, Sales", { exact: true });
+  await cell.fill("-15");
+  await cell.press("Enter");
+  await expect(page.locator(".insight").first()).toContainText("5");
+  await page.getByRole("tab", { name: "Paste CSV" }).click();
+  await expect(csv).toHaveValue(/Jan,-15/);
+  await csv.fill('Name,Value\n"broken,2');
+  await page.getByRole("button", { name: "Apply CSV" }).click();
+  await expect(page.locator(".notice.error")).toBeVisible();
+  await expect(page.locator(".insight").first()).toContainText("5");
+  await page.getByRole("button", { name: "Discard", exact: true }).click();
+  await expect(csv).toHaveValue(/Jan,-15/);
+  await expect(page.getByRole("tab", { name: "Edit table" })).toBeEnabled();
 });

@@ -39,10 +39,9 @@ export function DataTable({
       <div className="data-panel-header">
         <div>
           <h2 id="data-heading">
-            The numbers behind the picture{" "}
-            <span>{dataset.rows.length} rows</span>
+            Your data <span>{dataset.rows.length} rows</span>
           </h2>
-          <p>Click any cell to edit. Your chart follows along.</p>
+          <p>Edit a cell, then press Enter to save.</p>
         </div>
         <div className="table-actions">
           <Button

@@ -1,8 +1,8 @@
 # Plotroom
 
-**Your data. A clearer story.**
+**CSV in. Chart out.**
 
-An open-source chart studio built with Next.js, shadcn/ui, and Recharts. Upload a CSV, edit the numbers, choose a chart, and download a picture you can use anywhere.
+An open-source chart studio built with Next.js, shadcn/ui, and Recharts. Paste or upload a CSV, edit the numbers, choose a chart, and download a picture you can use anywhere. A minimal two-column workspace with light and dark themes.
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fmariansandurdesign%2Fcsv-to-chart-library)
 
@@ -11,13 +11,13 @@ An open-source chart studio built with Next.js, shadcn/ui, and Recharts. Upload 
 ## Features
 
 - Seven charts: bar, line, area, pie, donut, scatter, and radar.
-- CSV/TSV import through a file picker or drag and drop. Detects commas, semicolons, tabs, and pipes; supports quoted fields, embedded newlines, UTF-8 BOMs, and duplicate headers.
+- Paste CSV, Upload CSV, and Edit table tabs. Paste text and apply it explicitly, or import CSV/TSV through a file picker or drag and drop. Detects commas, semicolons, tabs, and pipes; supports quoted fields, embedded newlines, UTF-8 BOMs, and duplicate headers.
 - Editable table with pagination, add/delete rows, and undo for the last 20 data changes. Press Enter or leave a cell to apply; Escape cancels the current edit.
-- Column mapping, up to six series, four color palettes, chart titles/subtitles, and grid/legend toggles.
+- A collapsed Customize panel for column mapping, up to six series, four color palettes, chart titles/subtitles, and grid/legend toggles.
 - PNG export at 1×, 2×, or 3× resolution; scalable, self-contained SVG export. Includes titles and legends, without watermarks.
 - Download the edited data as CSV.
-- Total, average, maximum, and valid-value count for the first selected series, calculated over the complete dataset.
-- Sample data included. Responsive layout, keyboard controls, and an in-app guide.
+- Compact total, average, and maximum for the first selected series, calculated over the complete dataset.
+- Sample data included. Responsive layout, light/dark toggle, keyboard controls, and an in-app guide.
 - All data processing runs inside the browser tab. No account, API key, database, analytics, or file-upload endpoint.
 
 ## Run locally
@@ -61,6 +61,7 @@ Use the Deploy button above, or import this GitHub repository at [Vercel New Pro
 - Blank or invalid numeric cells are treated as missing, not zero. They are excluded from summaries and indicated in the preview. Missing points leave gaps in line/area charts.
 - Pie/donut use the first selected series; those charts and radar require nonnegative values. Scatter requires numeric X and Y values on the same row. Duplicate category labels remain separate rows; data is not silently aggregated.
 - Charts and image exports show the **first 100 rows**, or **first 12 rows for pie, donut, and radar**, to keep images readable. A notice appears whenever this limit applies. Summaries and edited CSV downloads use **all rows**.
+- Pasted CSV is applied explicitly; an invalid draft preserves the previous chart. Table edits keep the CSV tab in sync. Discard or apply pending CSV text before editing cells.
 - Data is kept in memory for the current tab only. Reloading clears edits. Download the edited CSV before leaving. Undo applies to edits and row operations; uploading a file or resetting the sample begins a new dataset.
 - CSV exports escape spreadsheet formula-like strings with a leading apostrophe. Valid signed numbers remain numeric. The original values remain unchanged in the app.
 - PNG files have a white background. SVG files contain vector chart elements and use system fonts so they do not need external assets. Very long export titles and legend labels are compressed to fit the image width.

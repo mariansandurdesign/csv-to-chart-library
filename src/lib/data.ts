@@ -78,9 +78,11 @@ export function parseCsv(text: string): Dataset {
   };
 }
 
-export function serializeCsv(dataset: Dataset): string {
+export function serializeCsv(dataset: Dataset, protectFormulas = true): string {
   const safeCell = (value: string) =>
-    /^[=+\-@\t\r]/.test(value) && numericValue(value) === null
+    protectFormulas &&
+    /^[=+\-@\t\r]/.test(value) &&
+    numericValue(value) === null
       ? `'${value}`
       : value;
   return Papa.unparse({
@@ -105,18 +107,12 @@ export function summarize(values: Array<number | null>) {
   };
 }
 
-export const SAMPLE_CSV = `Month,Organic,Direct,Referral
-Jan,2400,1400,800
-Feb,3200,1800,1200
-Mar,2800,1600,1000
-Apr,4200,2300,1700
-May,3800,2100,1400
-Jun,5100,2800,2100
-Jul,4600,2500,1800
-Aug,5800,3200,2400
-Sep,5200,2900,2100
-Oct,6400,3500,2700
-Nov,5900,3200,2300
-Dec,7200,4100,3100`;
+export const SAMPLE_CSV = `Month,Revenue,Expenses
+Jan,4200,2800
+Feb,5800,3400
+Mar,5100,3100
+Apr,6700,3800
+May,7200,4100
+Jun,6900,3700`;
 
 export const SAMPLE_DATA = parseCsv(SAMPLE_CSV);

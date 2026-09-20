@@ -109,6 +109,10 @@ describe("CSV export", () => {
   it("round trips sample data", () => {
     expect(parseCsv(serializeCsv(SAMPLE_DATA))).toEqual(SAMPLE_DATA);
   });
+  it("keeps formula-like text unchanged in the internal CSV editor", () => {
+    const data = parseCsv("Name,Value\n=example,10");
+    expect(parseCsv(serializeCsv(data, false))).toEqual(data);
+  });
   it("round trips signed numbers while escaping expressions", () => {
     const data = parseCsv("Label,Value\nA,-12.5\nB,+20\nC,-1+2");
     const result = parseCsv(serializeCsv(data));

@@ -22,8 +22,8 @@ export const chartTypes = [
 export type ChartType = (typeof chartTypes)[number]["id"];
 export const palettes = [
   {
-    name: "Evergreen",
-    colors: ["#247a59", "#8bb89a", "#d2dfb0", "#456d64", "#c6ab69", "#a1c9c4"],
+    name: "Studio",
+    colors: ["#7771ed", "#ef9453", "#51b4a3", "#cb76bd", "#d4b65e", "#70a5df"],
   },
   {
     name: "Coast",
@@ -35,7 +35,7 @@ export const palettes = [
   },
   {
     name: "Ink",
-    colors: ["#303d48", "#697b8a", "#a3b2bd", "#4d5b67", "#8396a5", "#cbd4dc"],
+    colors: ["#8895a1", "#b8c2cb", "#647888", "#92a9bc", "#728b9e", "#d2dae1"],
   },
 ];
 export const compactNumber = (value: number) =>

@@ -38,8 +38,10 @@ export function ChartPreview({ type, data, series, colors, showGrid }: Props) {
   const tooltip = (
     <Tooltip
       contentStyle={{
-        border: "1px solid #e0e6e0",
-        borderRadius: 10,
+        border: "1px solid var(--border)",
+        borderRadius: 8,
+        background: "var(--card)",
+        color: "var(--foreground)",
         fontSize: 12,
         boxShadow: "0 8px 30px #22372c12",
       }}
@@ -52,14 +54,15 @@ export function ChartPreview({ type, data, series, colors, showGrid }: Props) {
         <CartesianGrid
           strokeDasharray="3 5"
           vertical={false}
-          stroke="#e3e9e3"
+          stroke="#888888"
+          strokeOpacity={0.18}
         />
       )}
       <XAxis
         dataKey="label"
         tickLine={false}
         axisLine={false}
-        tick={{ fill: "#7c887f", fontSize: 11 }}
+        tick={{ fill: "#8b8b90", fontSize: 11 }}
         tickMargin={14}
         minTickGap={20}
       />
@@ -67,7 +70,7 @@ export function ChartPreview({ type, data, series, colors, showGrid }: Props) {
         tickFormatter={compactNumber}
         tickLine={false}
         axisLine={false}
-        tick={{ fill: "#7c887f", fontSize: 11 }}
+        tick={{ fill: "#8b8b90", fontSize: 11 }}
         width={52}
         tickMargin={12}
       />
@@ -87,7 +90,7 @@ export function ChartPreview({ type, data, series, colors, showGrid }: Props) {
               dataKey={column.id}
               name={column.name}
               fill={colors[i % colors.length]}
-              radius={[3, 3, 0, 0]}
+              radius={[5, 5, 0, 0]}
               maxBarSize={36}
               isAnimationActive={false}
             />
@@ -192,13 +195,19 @@ export function ChartPreview({ type, data, series, colors, showGrid }: Props) {
     case "scatter":
       chart = (
         <ScatterChart margin={margin}>
-          {showGrid && <CartesianGrid strokeDasharray="3 5" stroke="#e3e9e3" />}
+          {showGrid && (
+            <CartesianGrid
+              strokeDasharray="3 5"
+              stroke="#888888"
+              strokeOpacity={0.18}
+            />
+          )}
           <XAxis
             dataKey="x"
             type="number"
             tickLine={false}
             axisLine={false}
-            tick={{ fill: "#7c887f", fontSize: 11 }}
+            tick={{ fill: "#8b8b90", fontSize: 11 }}
             tickFormatter={compactNumber}
             tickMargin={14}
             domain={["auto", "auto"]}
@@ -208,7 +217,7 @@ export function ChartPreview({ type, data, series, colors, showGrid }: Props) {
             type="number"
             tickLine={false}
             axisLine={false}
-            tick={{ fill: "#7c887f", fontSize: 11 }}
+            tick={{ fill: "#8b8b90", fontSize: 11 }}
             tickFormatter={compactNumber}
             width={52}
             tickMargin={12}
@@ -252,10 +261,10 @@ export function ChartPreview({ type, data, series, colors, showGrid }: Props) {
     case "radar":
       chart = (
         <RadarChart data={data} outerRadius="78%">
-          {showGrid && <PolarGrid stroke="#dfe7df" />}
+          {showGrid && <PolarGrid stroke="#888888" strokeOpacity={0.25} />}
           <PolarAngleAxis
             dataKey="label"
-            tick={{ fill: "#7c887f", fontSize: 11 }}
+            tick={{ fill: "#8b8b90", fontSize: 11 }}
           />
           {tooltip}
           {series.map((column, i) => (
