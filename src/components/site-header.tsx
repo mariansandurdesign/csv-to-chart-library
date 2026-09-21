@@ -1,8 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { ChartNoAxesCombined, GitFork, Moon, Sun } from "lucide-react";
+import { GitFork, Moon, Sun } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { PlotroomLogo } from "@/components/plotroom-logo";
 
 export function SiteHeader({
   theme,
@@ -15,8 +16,9 @@ export function SiteHeader({
     <header className="site-header">
       <div className="header-inner">
         <Link className="brand" href="/" aria-label="Plotroom home">
-          <ChartNoAxesCombined size={23} strokeWidth={2} />
-          Plotroom<span>Data to chart</span>
+          <PlotroomLogo className="brand-logo" />
+          <strong>Plotroom</strong>
+          <span>Data to chart</span>
         </Link>
         <nav>
           <Link className="github-link" href="/charts">

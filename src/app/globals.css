@@ -33,27 +33,35 @@
 }
 :root,
 .light {
-  --background: #fff;
+  --background: #fbfbfc;
   --foreground: #18181b;
   --card: #fff;
-  --primary: #18181b;
+  --primary: #8b7cf6;
   --primary-foreground: #fafafa;
   --muted: #f4f4f5;
   --muted-foreground: #71717a;
   --border: #e4e4e7;
   --editor: #fafafa;
+  --brand-bg: #09090b;
+  --brand-accent: #8b7cf6;
+  --logo-ink: #fafafa;
+  --logo-accent: #8b7cf6;
   color-scheme: light;
 }
 .dark {
-  --background: #101011;
-  --foreground: #ededee;
-  --card: #18181a;
-  --primary: #ededee;
-  --primary-foreground: #18181b;
-  --muted: #222225;
-  --muted-foreground: #99999f;
-  --border: #303033;
-  --editor: #171719;
+  --background: #09090b;
+  --foreground: #fafafa;
+  --card: #111113;
+  --primary: #8b7cf6;
+  --primary-foreground: #fafafa;
+  --muted: #18181b;
+  --muted-foreground: #a1a1aa;
+  --border: #27272a;
+  --editor: #101013;
+  --brand-bg: #09090b;
+  --brand-accent: #8b7cf6;
+  --logo-ink: #fafafa;
+  --logo-accent: #8b7cf6;
   color-scheme: dark;
 }
 @layer base {
@@ -87,7 +95,7 @@ button:focus-visible,
 a:focus-visible,
 summary:focus-visible,
 select:focus-visible {
-  outline: 2px solid #888;
+  outline: 2px solid var(--brand-accent);
   outline-offset: 3px;
 }
 .app-shell {
@@ -113,10 +121,20 @@ select:focus-visible {
 .brand {
   display: flex;
   align-items: center;
-  gap: 9px;
+  gap: 8px;
   font-size: 19px;
   font-weight: 600;
   letter-spacing: 0;
+}
+.brand-logo {
+  width: 31px;
+  height: 31px;
+  color: var(--brand-bg);
+  border-radius: 8px;
+  box-shadow: 0 0 0 1px var(--border);
+}
+.brand strong {
+  font: inherit;
 }
 .brand span {
   color: var(--muted-foreground);
@@ -172,7 +190,7 @@ main {
 .chart-navigation button.selected {
   background: var(--muted);
   color: var(--foreground);
-  border-color: var(--border);
+  border-color: color-mix(in oklab, var(--brand-accent), var(--border) 45%);
 }
 .page-heading {
   margin-bottom: 30px;
@@ -235,7 +253,7 @@ h1 {
   tab-size: 2;
 }
 .csv-editor:focus {
-  outline: 1px solid #777;
+  outline: 1px solid var(--brand-accent);
   outline-offset: -1px;
 }
 .input-actions {
@@ -293,7 +311,7 @@ h1 {
 }
 .upload-zone:hover,
 .upload-zone.dragging {
-  border-color: #888;
+  border-color: var(--brand-accent);
   background: var(--muted);
 }
 .source-actions {
@@ -409,7 +427,7 @@ h1 {
 .series-options button.selected {
   color: var(--foreground);
   background: var(--muted);
-  border-color: #73737a;
+  border-color: var(--brand-accent);
 }
 .palette-options {
   display: flex;
@@ -424,7 +442,7 @@ h1 {
   padding: 6px 9px;
 }
 .palette-options button.selected {
-  border-color: #929298;
+  border-color: var(--brand-accent);
 }
 .palette-options span {
   width: 14px;
@@ -617,7 +635,7 @@ td input:hover {
 }
 td input:focus {
   background: var(--muted);
-  box-shadow: inset 0 0 0 1px #888;
+  box-shadow: inset 0 0 0 1px var(--brand-accent);
 }
 .row-delete {
   width: 30px;
@@ -997,18 +1015,16 @@ footer a:hover {
     linear-gradient(to right, var(--border) 1px, transparent 1px),
     linear-gradient(to bottom, var(--border) 1px, transparent 1px);
   background-size: 48px 48px;
-  opacity: 0.38;
+  opacity: 0.32;
   mask-image: linear-gradient(to bottom, #000 0%, #000 55%, transparent 100%);
 }
 .landing-hero::before {
   content: "";
   position: absolute;
-  width: 900px;
-  height: 720px;
-  top: -310px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: radial-gradient(ellipse, #7671ed20, transparent 68%);
+  inset: 0;
+  background:
+    linear-gradient(to bottom, color-mix(in oklab, var(--brand-accent), transparent 92%), transparent 42%),
+    linear-gradient(135deg, transparent 0 48%, color-mix(in oklab, var(--brand-accent), transparent 88%) 48% 52%, transparent 52%);
   pointer-events: none;
 }
 .hero-content {
@@ -1031,12 +1047,12 @@ footer a:hover {
 .hero-badge > span {
   width: 5px;
   height: 5px;
-  background: #8882f4;
+  background: var(--brand-accent);
   border-radius: 50%;
-  box-shadow: 0 0 8px #7771ed55;
+  box-shadow: 0 0 8px color-mix(in oklab, var(--brand-accent), transparent 45%);
 }
 .hero-content h1 {
-  font-size: clamp(44px, 5.2vw, 68px);
+  font-size: 66px;
   font-weight: 550;
   line-height: 1.13;
   letter-spacing: 0;
@@ -1045,11 +1061,11 @@ footer a:hover {
 .hero-content h1 em {
   font-family: Georgia, "Times New Roman", serif;
   font-weight: 400;
-  color: #938df5;
+  color: var(--brand-accent);
   letter-spacing: 0;
 }
 .light .hero-content h1 em {
-  color: #625be0;
+  color: #6f61dd;
 }
 .hero-content > p {
   max-width: 560px;
@@ -1080,13 +1096,13 @@ footer a:hover {
     border-color 0.15s;
 }
 .landing-button.primary {
-  background: #7069e5;
-  border-color: #817aec;
+  background: var(--brand-accent);
+  border-color: #9b8fff;
   color: white;
-  box-shadow: 0 3px 12px #7069e51a;
+  box-shadow: 0 3px 12px color-mix(in oklab, var(--brand-accent), transparent 80%);
 }
 .landing-button.primary:hover {
-  background: #817aed;
+  background: #9b8fff;
 }
 .landing-button.secondary {
   background: var(--background);
@@ -1112,7 +1128,7 @@ footer a:hover {
   gap: 5px;
 }
 .hero-reassurance svg {
-  color: #8a84df;
+  color: var(--brand-accent);
 }
 .landing-demo-area {
   position: relative;
@@ -1140,17 +1156,17 @@ footer a:hover {
 }
 .demo-types button:hover {
   color: var(--foreground);
-  border-color: #7069e5;
+  border-color: var(--brand-accent);
 }
 .demo-types button.selected {
-  color: #c5c1ff;
-  background: #242136;
-  border-color: #615994;
+  color: #fafafa;
+  background: #18152b;
+  border-color: var(--brand-accent);
 }
 .light .demo-types button.selected {
-  color: #635bc4;
+  color: #5f51d6;
   background: #f0eefc;
-  border-color: #beb7e9;
+  border-color: #c5bfff;
 }
 .landing-demo {
   border: 1px solid var(--border);
@@ -1158,7 +1174,7 @@ footer a:hover {
   overflow: hidden;
   background: var(--card);
   box-shadow:
-    0 -14px 60px #7069e50b,
+    0 -14px 60px color-mix(in oklab, var(--brand-accent), transparent 94%),
     0 24px 55px #00000010;
 }
 .demo-titlebar {
@@ -1289,13 +1305,13 @@ footer a:hover {
   text-align: center;
 }
 .section-eyebrow {
-  color: #9792d6;
+  color: var(--brand-accent);
   letter-spacing: 0;
   font-size: 9px;
   font-weight: 500;
 }
 .light .section-eyebrow {
-  color: #746ea5;
+  color: #6f61dd;
 }
 .landing-section-heading h2,
 .library-heading h2,
@@ -1336,7 +1352,7 @@ footer a:hover {
 }
 .step-top span {
   font-family: var(--font-geist-mono), monospace;
-  color: #9b96d4;
+  color: var(--brand-accent);
   font-size: 11px;
 }
 .steps-grid h3 {
@@ -1395,11 +1411,11 @@ footer a:hover {
   background: var(--card);
 }
 .chart-library-link:hover {
-  border-color: #7069e5;
+  border-color: var(--brand-accent);
   background: var(--muted);
 }
 .chart-library-link > svg:first-child {
-  color: #9b94e7;
+  color: var(--brand-accent);
   margin-bottom: 20px;
 }
 .chart-library-link h3 {
@@ -1464,7 +1480,7 @@ footer a:hover {
   padding-top: 54px;
   padding-bottom: 60px;
   border-top: 1px solid var(--border);
-  background: radial-gradient(ellipse at bottom, #7771ed0a, transparent 75%);
+  background: linear-gradient(to top, color-mix(in oklab, var(--brand-accent), transparent 95%), transparent 78%);
 }
 .landing-last-call h2 {
   margin-top: 0;

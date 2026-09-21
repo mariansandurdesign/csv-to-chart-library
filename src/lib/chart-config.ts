@@ -23,7 +23,7 @@ export type ChartType = (typeof chartTypes)[number]["id"];
 export const palettes = [
   {
     name: "Studio",
-    colors: ["#7771ed", "#ef9453", "#51b4a3", "#cb76bd", "#d4b65e", "#70a5df"],
+    colors: ["#8b7cf6", "#51b4a3", "#f2a65a", "#cb76bd", "#70a5df", "#d4b65e"],
   },
   {
     name: "Coast",
